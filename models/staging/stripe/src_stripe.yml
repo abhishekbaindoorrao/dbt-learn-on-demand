@@ -1,0 +1,38 @@
+version: 2
+
+sources: 
+    - name: stripe
+      description: A copy of a payments table from stripe
+      database: raw
+      tables:
+        - name: payment
+          description: Raw payment data
+          loaded_at_field: _batched_at
+          freshness: 
+            warn_after: {count: 12, period: hour}
+            error_after: {count: 24, period: hour}
+            
+          columns:
+            - name: id
+              description: PK for payments
+              tests:
+                - unique
+                - not_null
+            - name: orderid,
+              description: FK for orderid table
+              tests:
+                - not_null
+            - name: paymentmethod
+              description: Stirng method used to pay
+              tests:
+                - not_null
+            - name: status
+              description: String status associated with payment
+              tests:
+                - not_null                
+            - name: amount
+              description: Int amount paid in cents or pence
+              tests: 
+                - not_null
+            - name: created     
+              description: Timestamp of when payment was created
